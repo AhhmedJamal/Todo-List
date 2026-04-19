@@ -1,0 +1,66 @@
+<?php
+
+// $dsn = "mysql:host=localhost;port=3308;dbname=todo;charset=utf8mb4";
+// $username = "root";
+// $password = "";
+
+// try {
+//     $pdo = new PDO($dsn, $username, $password);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// } catch (PDOException $e) {
+//     die("Connection failed: " . $e->getMessage());
+// }
+
+session_start();
+
+if(!isset($_SESSION["todo"])){
+     $_SESSION["todo"] = [];
+}
+$todo_err = "";
+
+$edit_key = isset($_GET["edit"]) ? $_GET["edit"] : "";
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+     if(isset($_POST["edit_key"])){
+          foreach($_SESSION["todo"] as $idx => $item){
+               if($item["id"] === $_POST["edit_key"]){
+                    $_SESSION["todo"][$idx]["text"] = trim($_POST["edit_todo"]);
+                    break;
+               }
+          }
+          header("Location: " . $_SERVER["PHP_SELF"]);
+          exit();
+     }
+     if(empty(trim($_POST["todo"]))){
+          $todo_err = "Please enter a todo";
+     } else {
+          $text = trim($_POST["todo"]);
+          $exists = false;
+          foreach($_SESSION["todo"] as $item){
+               if($item["text"] === $text){ $exists = true; break; }
+          }
+          if($exists){
+               $todo_err = "Todo already exists";
+          } else {
+               $_SESSION["todo"][] = ["text" => $text, "id" => uniqid(), "done" => false];
+               header("Location: " . $_SERVER["PHP_SELF"]);
+               exit();
+          }
+     }
+}
+
+if($_SERVER["REQUEST_METHOD"] == "GET"){
+     if(isset($_GET["delete"])){
+          $del_id = $_GET["delete"];
+          foreach($_SESSION["todo"] as $idx => $item){
+               if($item["id"] === $del_id){
+                    unset($_SESSION["todo"][$idx]);
+                    break;
+               }
+          }
+          header("Location: " . $_SERVER["PHP_SELF"]);
+          exit();
+     }
+}
+
+?>
