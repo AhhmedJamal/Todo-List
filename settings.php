@@ -8,11 +8,23 @@
      <title>Settings</title>
 </head>
 <body>
-          <?php include "./sidebar.php" ?>
-<div class="content-settings">
-     Settings
-</div>
-<script src="./app.js"></script>
+     <?php include "./sidebar.php" ?>
+     <div class="content-settings">
+      <form class="account" action="POST">
+          <div class="avatr">
+               <i class="fa-regular fa-circle-user"></i>
+               <h3>Name User</h3>
+          </div>
+          <label for="name">Name</label>
+          <input type="name" name="name" id="name">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password">
+          <button class="btn">Submit</button>
+      </form>
+     </div>
 
+     <script src="./app.js"></script>
 </body>
 </html>
